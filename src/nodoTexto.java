@@ -1,17 +1,15 @@
 import java.time.LocalDate;
-class NodoTexto{
-
+class nodoTexto{
     private LocalDate fecha;
     private String texto;
     private int vistas;
     private nodoTexto siguiente;
 
-
-    public NodoTexto(String texto, int vistas){
+    public nodoTexto(String texto, int vistas){
         this.texto=texto;
         this.vistas=vistas;
         this.fecha= LocalDate.now();
-        this.siguiente=null;
+        siguiente = null;
     }
     public void setSiguienteTexto(nodoTexto sig){
         this.siguiente=sig;
@@ -29,9 +27,4 @@ class NodoTexto{
         return fecha;
     }
 
-
-    @Override
-    public String toString(){
-        return "Texto{texto='" + texto + "', vistas=" + vistas + ", fecha=" + fecha + "}";
-    }
 }

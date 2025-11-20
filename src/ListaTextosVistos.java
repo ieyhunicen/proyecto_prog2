@@ -1,8 +1,8 @@
-class ListaTextosVistos{
+class ListaTextosMasVistos{
     private nodoTextoVisto primero;
 
 
-    public ListaTextosVistos(){
+    public ListaTextosMasVistos(){
         primero = null;
     }
 
@@ -13,7 +13,7 @@ class ListaTextosVistos{
     public void setSiguienteTextoVisto(nodoTextoVisto nuevo){
         this.primero = nuevo;
     }
-
+    //manda el texto al final de la lista, ya que siempre van a comenzar en 0 vistas.
     public void insertarTextos(nodoTextoVisto nuevo){
         if(primero == null){
             primero = nuevo;

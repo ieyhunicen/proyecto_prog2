@@ -72,7 +72,7 @@ class ArbolUsuario{
     public boolean verificarTextoExistente(String texto, nodoArbolUsuario actual){
         boolean TextoExistente = false;
         nodoTexto recorrido = actual.getTextos();
-        while(!texto.equals(recorrido.getPrimerTexto()) && recorrido!=null){
+        while(!texto.equals(recorrido.getPrimerTexto())) && recorrido!=null){
             recorrido = recorrido.getSiguienteTexto();
         }
         if(texto.equals(recorrido.getPrimerTexto())){

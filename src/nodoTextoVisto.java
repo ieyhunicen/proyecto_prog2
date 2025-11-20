@@ -1,9 +1,9 @@
-class NodoTextoVisto{
+class nodoTextoVisto{
 
     private nodoTexto textoVisto;
     private nodoTextoVisto sigVisto;
 
-    public NodoTextoVisto(){
+    public nodoTextoVisto(){
         this.textoVisto=null;
         this.sigVisto=null;
     }
@@ -11,7 +11,7 @@ class NodoTextoVisto{
     public nodoTexto getTextoVisto(){
         return textoVisto;
     }
-    public void setTextoVisto(nodoTexto nuevo){
+    public void setTexto(nodoTexto nuevo){
         this.textoVisto = nuevo;
     }
     public nodoTextoVisto getSiguienteTextoVisto(){
@@ -24,4 +24,6 @@ class NodoTextoVisto{
     public String toString(){
         return "Texto visto{textoVisto='" + textoVisto + "}";
     }
+
+
 }

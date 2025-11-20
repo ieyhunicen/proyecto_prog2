@@ -1,4 +1,4 @@
-class NodoArbolUsuario{
+class nodoArbolUsuario{
 
     private String nick;
     private String password;
@@ -7,7 +7,7 @@ class NodoArbolUsuario{
     private nodoArbolUsuario anterior;
     private nodoArbolUsuario siguiente;
 
-    public NodoArbolUsuario(String nick, String pass){
+    public nodoArbolUsuario(String nick, String pass){
         this.nick = nick;
         this.password = pass;
         primerTexto = null;
@@ -30,15 +30,15 @@ class NodoArbolUsuario{
         this.password=password;
     }
 
-    public NodoArbolUsuario getSiguiente(){
+    public nodoArbolUsuario getSiguiente(){
         return siguiente;
     }
 
-    public void setSiguiente(NodoArbolUsuario nuevo){
+    public void setSiguiente(nodoArbolUsuario nuevo){
         this.siguiente = nuevo;
     }
 
-    public NodoArbolUsuario getAnterior(){
+    public nodoArbolUsuario getAnterior(){
         return anterior;
     }
 

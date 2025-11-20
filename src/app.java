@@ -1,10 +1,9 @@
-
 import java.util.Scanner;
 import java.io.IOException;
 class app {
     static Scanner sc = new Scanner(System.in);
-    static arbolUsuario arbol = new arbolUsuario();
-    static ListaTextosVistos Lista = new ListaTextosVistos();
+    static ArbolUsuario arbol = new ArbolUsuario();
+    static ListaTextosMasVistos Lista = new ListaTextosMasVistos();
     static nodoArbolUsuario usuarioLogueado = null;
     public static void main(String[] args) throws IOException, ClassNotFoundException{
         int selectmenu = 0;
@@ -88,12 +87,12 @@ class app {
             }
             return false;
         } else if (menu == 3) { // Opción 3: Devolver el usuario que más textos creó
-            gestorArchivos.LeerArchivo();
+            GestorArchivos.LeerArchivo(arbol);
             return false;
         }else if (menu == 4) {
-            gestorArchivos.guardarUsuarios(arbol.getRaiz());
+            GestorArchivos.guardarUsuarios(arbol.getRaiz());    //falta sumar vistas.ser, y textos.ser
 
-            return false;
+            return true;
         }
         return true;
     }
@@ -109,7 +108,7 @@ class app {
             if(textoExistente == false){
                 nodoTexto nuevo = new nodoTexto(texto, 0);
                 nodoTextoVisto nuevoTexto = new nodoTextoVisto();
-                nuevoTexto.setTextoVisto(nuevo);
+                nuevoTexto.setTexto(nuevo);
                 usuarioLogueado.insertarTextoOrdenadoFechaAsc(nuevo);
                 Lista.insertarTextos(nuevoTexto);
             }
