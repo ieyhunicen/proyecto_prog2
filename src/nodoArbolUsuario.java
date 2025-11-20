@@ -65,6 +65,7 @@ class nodoArbolUsuario{
     public void insertarTextoOrdenadoFechaAsc(nodoTexto nuevo){
         if(primerTexto==null){
             primerTexto = nuevo;
+            return;
         }
         if(nuevo.getFecha().isBefore(primerTexto.getFecha())){
             nuevo.setSiguienteTexto(primerTexto);

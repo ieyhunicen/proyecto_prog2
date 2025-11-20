@@ -70,15 +70,15 @@ class ArbolUsuario{
     }
 
     public boolean verificarTextoExistente(String texto, nodoArbolUsuario actual){
-        boolean TextoExistente = false;
+        if (actual == null) return false;
         nodoTexto recorrido = actual.getTextos();
-        while(!texto.equals(recorrido.getPrimerTexto())) && recorrido!=null){
+        while(recorrido != null){
+            if(texto.equals(recorrido.getPrimerTexto())){
+                System.out.println("Error: El texto ya ha sido creado por este usuario.");
+                return true; // Texto encontrado
+            }
             recorrido = recorrido.getSiguienteTexto();
         }
-        if(texto.equals(recorrido.getPrimerTexto())){
-            System.out.println("el texto ya estaba creado");
-            return true;
-        }
-        return false;
+        return false; // Texto no encontrado
     }
 }

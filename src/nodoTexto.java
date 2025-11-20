@@ -4,13 +4,16 @@ class nodoTexto{
     private String texto;
     private int vistas;
     private nodoTexto siguiente;
+    private nodoTexto menosVisto;
 
     public nodoTexto(String texto, int vistas){
         this.texto=texto;
         this.vistas=vistas;
         this.fecha= LocalDate.now();
         siguiente = null;
+        menosVisto = null;
     }
+
     public void setSiguienteTexto(nodoTexto sig){
         this.siguiente=sig;
     }
@@ -26,5 +29,13 @@ class nodoTexto{
     public LocalDate getFecha(){
         return fecha;
     }
-
+    public nodoTexto getMenosVisto(){
+        return menosVisto;
+    }
+    public void setMenosVisto(nodoTexto menosVisto){
+        this.menosVisto = menosVisto;
+    }
+    public void addVista(){
+        this.vistas++;
+    }
 }
