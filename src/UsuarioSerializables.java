@@ -7,9 +7,7 @@ class UsuarioSerializables implements Serializable{
     public UsuarioSerializables(String nick, String password){
         this.nick = nick;
         this.password = password;
-
     }
-
     public String getNick(){
         return this.nick;
     }

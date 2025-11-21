@@ -11,7 +11,7 @@ class nodoTextoVisto{
     public nodoTexto getTextoVisto(){
         return textoVisto;
     }
-    public void setTexto(nodoTexto nuevo){
+    public void setTextoVisto(nodoTexto nuevo){
         this.textoVisto = nuevo;
     }
     public nodoTextoVisto getSiguienteTextoVisto(){

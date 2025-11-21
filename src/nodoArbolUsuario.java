@@ -1,9 +1,8 @@
 class nodoArbolUsuario{
-
     private String nick;
     private String password;
     private nodoTexto primerTexto;
-    private nodoTextoVisto primerTextoVisto;
+    private nodoTextoVisto textosVistos;
     private nodoArbolUsuario anterior;
     private nodoArbolUsuario siguiente;
 
@@ -11,7 +10,7 @@ class nodoArbolUsuario{
         this.nick = nick;
         this.password = pass;
         primerTexto = null;
-        primerTextoVisto = null;
+        textosVistos = null;
         anterior = siguiente = null;
     }
     public String getNick(){
@@ -46,7 +45,9 @@ class nodoArbolUsuario{
         this.anterior = nuevo;
     }
 
-
+    public nodoTextoVisto getTextosVistos(){
+        return textosVistos;
+    }
     public nodoTexto getTextos(){
         return primerTexto;
     }
@@ -60,6 +61,17 @@ class nodoArbolUsuario{
             actual=actual.getSiguienteTexto();
         }
         return cant;
+    }
+
+    public boolean yaVioTexto(nodoTexto textoBuscado){
+        nodoTextoVisto recorrido = this.textosVistos;
+        while(recorrido != null){
+            if(recorrido.getTextoVisto() == textoBuscado){
+                return true;
+            }
+            recorrido = recorrido.getSiguienteTextoVisto();
+        }
+        return false;
     }
 
     public void insertarTextoOrdenadoFechaAsc(nodoTexto nuevo){
@@ -81,5 +93,15 @@ class nodoArbolUsuario{
         actual.setSiguienteTexto(nuevo);
     }
 
-
+    public void insertarTextoVisto(nodoTextoVisto nuevoVisto) {
+        if(this.textosVistos == null){
+            this.textosVistos = nuevoVisto;
+        }else{
+            nodoTextoVisto actual = this.textosVistos;
+            while(actual.getSiguienteTextoVisto() != null){
+                actual = actual.getSiguienteTextoVisto();
+            }
+            actual.setSiguienteTextoVisto(nuevoVisto);
+        }
+    }
 }

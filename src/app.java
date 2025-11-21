@@ -9,6 +9,7 @@ class app {
     public static void main(String[] args) throws IOException, ClassNotFoundException{
         GestorArchivos.LeerUsuarios(arbol);
         GestorArchivos.LeerTexto(arbol);
+        GestorArchivos.LeerVistas(arbol);
         int selectmenu = 0;
         boolean cerrar = false;
         while (!cerrar) {
@@ -34,10 +35,7 @@ class app {
             }
         }
         System.out.println("Saliendo de Tex-Tok. ¡Hasta pronto!");
-        //mandarlo a archivos
     }
-
-
     public static boolean primerMenu(int menu) throws IOException , ClassNotFoundException{ //poner try,catch en el gestor
         if (menu == 1) {
             String nick = "";
@@ -93,8 +91,9 @@ class app {
             arbol.usuarioConMasTextos();
             return false;
         }else if (menu == 4) {
-            GestorArchivos.guardarUsuarios(arbol.getRaiz());    //falta sumar vistas.ser, y textos.ser
+            GestorArchivos.guardarUsuarios(arbol.getRaiz());
             GestorArchivos.guardarTextos(arbol.getRaiz());
+            GestorArchivos.guardarVistas(arbol.getRaiz(),arbol);
             return true;
         }
         return true;
@@ -111,8 +110,7 @@ class app {
                 System.out.println("Error: No se puede crear un texto vacío.");
                 return;
             }
-            if (arbol.verificarTextoExistente(texto, usuarioLogueado)) {
-                // El error se muestra dentro de verificarTextoExistente
+            if(arbol.verificarTextoExistente(texto, usuarioLogueado)){
                 return;
             }
             nodoTexto nuevo = new nodoTexto(texto, 0, LocalDate.now());
@@ -120,22 +118,35 @@ class app {
             System.out.println("Texto creado exitosamente y agregado a la lista.");
             insertarTextoMasVisto(nuevo);
         } else if (menu == 2) {
-            System.out.println("Funcionalidad 'Visualizar texto' pendiente de implementar.");
-        } else if (menu == 3) {
-
-            if (usuarioLogueado == null) {
+            String seguir = "";
+            boolean continuarVisualizando = true;
+            while (continuarVisualizando) {
+                boolean textoEncontrado = visualizarTexto();
+                if (!textoEncontrado){
+                    System.out.println("No hay más textos disponibles que no hayas visto o que no sean tuyos.");
+                    continuarVisualizando = false;
+                } else {
+                    System.out.println("\n--- Opciones ---");
+                    System.out.println("Presione '.' (punto) para ver el siguiente texto.");
+                    System.out.println("Presione 'X' para volver al menú anterior.");
+                    System.out.print("Esperando entrada: ");
+                    seguir = sc.nextLine();
+                    if(seguir.equals("x")){
+                        continuarVisualizando = false;
+                    }
+                }
+            }
+        }else if (menu == 3){
+            if(usuarioLogueado == null) {
                 System.out.println("Error interno: No hay sesión activa.");
                 return;
             }
-
             String intentoUno = "";
             String intentoDos = "";
             boolean passwordCambiada = false;
-
             while (!passwordCambiada) {
                 System.out.println("Ingrese la NUEVA clave:");
                 intentoUno = sc.nextLine();
-
                 if (intentoUno.isEmpty()) {
                     System.out.println("La clave no puede estar vacía.");
                 } else {
@@ -146,13 +157,13 @@ class app {
                         usuarioLogueado.setNuevaPassword(intentoUno);
                         System.out.println("Clave actualizada exitosamente.");
                         passwordCambiada = true;
-                    } else {
+                    } else{
                         System.out.println("Las claves ingresadas no coinciden.");
                     }
                 }
             }
 
-        } else if (menu == 4) {
+        }else if (menu == 4){
             usuarioLogueado = null;
             System.out.println("Sesión cerrada. Volviendo al menú principal.");
         } else {
@@ -181,5 +192,79 @@ class app {
             texto += linea + "\n";
         }
         return texto;
+    }
+    public static boolean visualizarTexto(){
+        nodoTexto actual = textosMasVistos;
+        nodoTexto visualizarTexto = null;
+        boolean encontrado = false;
+        while(actual != null && !encontrado){
+            nodoArbolUsuario creador = arbol.buscarCreadorDeTexto(actual);
+            boolean esMiTexto = (creador != null && creador.getNick().equals(usuarioLogueado.getNick()));
+            if(!esMiTexto){
+                boolean yaVio = usuarioLogueado.yaVioTexto(actual);
+                if(!yaVio){
+                    visualizarTexto = actual;
+                    encontrado = true;
+                }
+            }
+            if(!encontrado){
+                actual = actual.getMenosVisto();
+            }
+        }
+        if(visualizarTexto != null){
+            System.out.println("\n=============================================");
+            System.out.println("Leyendo texto (Vistas antes: " + visualizarTexto.getVistas() + ")");
+            System.out.println("---------------------------------------------");
+            System.out.println(visualizarTexto.getPrimerTexto());
+            System.out.println("---------------------------------------------");
+            visualizarTexto.addVista();
+            reordenarListaMasVistos(visualizarTexto);
+            nodoTextoVisto nuevoVisto = new nodoTextoVisto();
+            nuevoVisto.setTextoVisto(visualizarTexto);
+            usuarioLogueado.insertarTextoVisto(nuevoVisto);
+
+            System.out.println("Visualización completada. Vistas actuales: " + visualizarTexto.getVistas());
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static void reordenarListaMasVistos(nodoTexto nodoModificado){
+        if(textosMasVistos == null || nodoModificado.getMenosVisto() == null){
+            return;
+        }
+        if(nodoModificado.getVistas() <= nodoModificado.getMenosVisto().getVistas()){
+            return;
+        }
+        nodoTexto anterior = null;
+        nodoTexto actual = textosMasVistos;
+
+        if (actual == nodoModificado) {
+            textosMasVistos = nodoModificado.getMenosVisto();
+        } else {
+            while (actual != null && actual.getMenosVisto() != nodoModificado) {
+                actual = actual.getMenosVisto();
+            }
+            if (actual != null) {
+                anterior = actual;
+                anterior.setMenosVisto(nodoModificado.getMenosVisto());
+            } else {
+                return;
+            }
+        }
+        nodoModificado.setMenosVisto(null);
+        nodoTexto puntero = textosMasVistos;
+        nodoTexto nuevaPosicionAnterior = null;
+        while(puntero != null && puntero.getVistas() >= nodoModificado.getVistas()){
+            nuevaPosicionAnterior = puntero;
+            puntero = puntero.getMenosVisto();
+        }
+        if(nuevaPosicionAnterior == null){
+            nodoModificado.setMenosVisto(textosMasVistos);
+            textosMasVistos = nodoModificado;
+        } else{
+            nodoModificado.setMenosVisto(nuevaPosicionAnterior.getMenosVisto());
+            nuevaPosicionAnterior.setMenosVisto(nodoModificado);
+        }
     }
 }
