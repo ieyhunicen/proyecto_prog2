@@ -1,15 +1,17 @@
 import java.util.Scanner;
 import java.io.IOException;
+import java.time.LocalDate;
 class app {
     static Scanner sc = new Scanner(System.in);
     static ArbolUsuario arbol = new ArbolUsuario();
-    static nodoTexto textosMasVistos = null;
+    static nodoTexto textosMasVistos =null;
     static nodoArbolUsuario usuarioLogueado = null;
     public static void main(String[] args) throws IOException, ClassNotFoundException{
-        GestorArchivos.LeerArchivo(arbol);
+        GestorArchivos.LeerUsuarios(arbol);
+        GestorArchivos.LeerTexto(arbol);
         int selectmenu = 0;
         boolean cerrar = false;
-        while (!cerrar){
+        while (!cerrar) {
             if (usuarioLogueado == null) {
                 System.out.println("Envie un numero deacuerdo a lo que desee\n" +
                         "1-Identificarse\n" +
@@ -87,11 +89,12 @@ class app {
                 }
             }
             return false;
-        } else if (menu == 3) { // Opción 3: Devolver el usuario que más textos creó
+        } else if (menu == 3) {
+            arbol.usuarioConMasTextos();
             return false;
         }else if (menu == 4) {
             GestorArchivos.guardarUsuarios(arbol.getRaiz());    //falta sumar vistas.ser, y textos.ser
-
+            GestorArchivos.guardarTextos(arbol.getRaiz());
             return true;
         }
         return true;
@@ -100,25 +103,22 @@ class app {
 
 
 
-    public static void segundoMenu(int menu)throws IOException , ClassNotFoundException {
+    public static void segundoMenu(int menu) {
         if (menu == 1) {
-            if (menu == 1) {
-                String texto = "";
-                texto = solicitarTexto();
-                if(texto.isEmpty()) {
-                    System.out.println("Error: No se puede crear un texto vacío.");
-                    return;
-                }
-                if (arbol.verificarTextoExistente(texto, usuarioLogueado)) {
-                    // El error se muestra dentro de verificarTextoExistente
-                    return;
-                }
-                nodoTexto nuevo = new nodoTexto(texto, 0);
-                usuarioLogueado.insertarTextoOrdenadoFechaAsc(nuevo);
-                System.out.println("Texto creado exitosamente y agregado a la lista.");
-                insertarTextoMasVisto(nuevo);
+            String texto = "";
+            texto = solicitarTexto();
+            if(texto.isEmpty()) {
+                System.out.println("Error: No se puede crear un texto vacío.");
+                return;
             }
-
+            if (arbol.verificarTextoExistente(texto, usuarioLogueado)) {
+                // El error se muestra dentro de verificarTextoExistente
+                return;
+            }
+            nodoTexto nuevo = new nodoTexto(texto, 0, LocalDate.now());
+            usuarioLogueado.insertarTextoOrdenadoFechaAsc(nuevo);
+            System.out.println("Texto creado exitosamente y agregado a la lista.");
+            insertarTextoMasVisto(nuevo);
         } else if (menu == 2) {
             System.out.println("Funcionalidad 'Visualizar texto' pendiente de implementar.");
         } else if (menu == 3) {
@@ -159,20 +159,7 @@ class app {
             System.out.println("Ingresaste una opcion no valida");
         }
     }
-
-    public  static String solicitarTexto(){
-        String texto = "";
-        String linea;
-
-        System.out.println("Escriba el texto (enter para terminar):");
-
-        while(!(linea = sc.nextLine()).isEmpty()){  //usa concatenacion.
-            texto += linea + "\n";
-        }
-        return texto;
-    }
     public static void insertarTextoMasVisto(nodoTexto nuevoTexto){
-
         if(textosMasVistos == null){
             textosMasVistos = nuevoTexto;
         }else{
@@ -183,5 +170,16 @@ class app {
             }
             actual.setMenosVisto(nuevoTexto);
         }
+    }
+    public  static String solicitarTexto(){
+        String texto = "";
+        String linea;
+
+        System.out.println("Escriba el texto (enter para terminar):");
+
+        while(!(linea = sc.nextLine()).isEmpty()){  //usa concatenacion.
+            texto += linea + "\n";
+        }
+        return texto;
     }
 }

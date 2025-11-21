@@ -10,6 +10,34 @@ class ArbolUsuario{
         return raiz;
     }
 
+
+    public void usuarioConMasTextos() {
+        if(raiz!=null){
+            nodoArbolUsuario actual = usuarioConMasTextosRec(this.raiz, this.raiz);
+            System.out.println("El usuario "+ actual.getNick()+" es el Usuario que mas textos creo\n"+"Y creo "+actual.getCantTextos()+" textos");
+        }else{
+            System.out.println("no intentes pavadas");
+        }
+    }
+
+    private nodoArbolUsuario usuarioConMasTextosRec(nodoArbolUsuario actual, nodoArbolUsuario maxNodo) {
+        if (actual == null) {
+            return maxNodo;
+        }
+        nodoArbolUsuario maxIzq = usuarioConMasTextosRec(actual.getAnterior(), maxNodo);
+        if (maxIzq.getCantTextos() > maxNodo.getCantTextos()) {
+            maxNodo = maxIzq;
+        }
+        if (actual.getCantTextos() > maxNodo.getCantTextos()) {
+            maxNodo = actual;
+        }
+        nodoArbolUsuario maxDer = usuarioConMasTextosRec(actual.getSiguiente(), maxNodo);
+        if (maxDer.getCantTextos() > maxNodo.getCantTextos()) {
+            maxNodo = maxDer;
+        }
+        return maxNodo;
+    }
+
     public void insertarUsuarios(String nick, String password) {
         this.raiz = insertarUsuariosRec(this.raiz, nick, password);
     }
@@ -24,6 +52,24 @@ class ArbolUsuario{
             actual.setSiguiente(insertarUsuariosRec(actual.getSiguiente(), nick, password));
         }
         return actual;
+    }
+
+    public nodoArbolUsuario buscarUsuario(String nombre) {
+        return buscarUsuarioRec(nombre, raiz);
+    }
+
+    private nodoArbolUsuario buscarUsuarioRec(String nombre, nodoArbolUsuario actual){
+        if (actual == null) {
+            return null;
+        }
+        int comparador = nombre.compareTo(actual.getNick());
+        if (comparador < 0) {
+            return buscarUsuarioRec(nombre, actual.getAnterior());
+        } else if (comparador > 0) {
+            return buscarUsuarioRec(nombre, actual.getSiguiente());
+        } else {
+            return actual;
+        }
     }
 
     public boolean buscarNombre(String nombre){

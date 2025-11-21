@@ -6,12 +6,12 @@ class nodoTexto{
     private nodoTexto siguiente;
     private nodoTexto menosVisto;
 
-    public nodoTexto(String texto, int vistas){
-        this.texto=texto;
-        this.vistas=vistas;
-        this.fecha= LocalDate.now();
-        siguiente = null;
-        menosVisto = null;
+    public nodoTexto(String texto, int vistas, LocalDate fecha){
+        this.texto = texto;
+        this.vistas= vistas;
+        this.fecha = fecha;
+        this.siguiente = null;
+        this.menosVisto = null;
     }
 
     public void setSiguienteTexto(nodoTexto sig){

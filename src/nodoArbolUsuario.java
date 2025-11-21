@@ -52,7 +52,7 @@ class nodoArbolUsuario{
     }
 
 
-    public int cantidadTextos(){
+    public int getCantTextos(){
         int cant=0;
         nodoTexto actual = primerTexto;
         while(actual!=null){
